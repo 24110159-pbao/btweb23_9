@@ -8,168 +8,1078 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Shop Management</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+
+            font-family:
+                Inter,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            color: #1f2937;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(99, 102, 241, 0.16),
+                    transparent 32%
+                ),
+                radial-gradient(
+                    circle at bottom right,
+                    rgba(59, 130, 246, 0.13),
+                    transparent 32%
+                ),
+                #f5f7fb;
+        }
+
+        /* =====================================================
+           COMMON
+        ===================================================== */
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .page-wrapper {
+            padding: 45px 0 60px;
+        }
+
+        /* =====================================================
+           ANONYMOUS
+        ===================================================== */
+
+        .welcome-card {
+            position: relative;
+            overflow: hidden;
+
+            padding: 55px 45px;
+
+            border-radius: 28px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5 0%,
+                    #2563eb 100%
+                );
+
+            color: white;
+
+            box-shadow:
+                0 20px 50px rgba(37, 99, 235, 0.25);
+        }
+
+        .welcome-card::before {
+            content: "";
+
+            position: absolute;
+
+            width: 300px;
+            height: 300px;
+
+            right: -100px;
+            top: -120px;
+
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.10);
+        }
+
+        .welcome-card::after {
+            content: "";
+
+            position: absolute;
+
+            width: 220px;
+            height: 220px;
+
+            right: 120px;
+            bottom: -150px;
+
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+
+            max-width: 650px;
+        }
+
+        .welcome-badge {
+            display: inline-flex;
+            align-items: center;
+
+            padding: 7px 13px;
+
+            margin-bottom: 18px;
+
+            border-radius: 999px;
+
+            background: rgba(255, 255, 255, 0.15);
+
+            font-size: 13px;
+            font-weight: 600;
+
+            backdrop-filter: blur(10px);
+        }
+
+        .welcome-card h1 {
+            margin-bottom: 14px;
+
+            font-size: 38px;
+            line-height: 1.2;
+            font-weight: 800;
+        }
+
+        .welcome-card p {
+            margin-bottom: 10px;
+
+            color: rgba(255, 255, 255, 0.88);
+
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .welcome-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+
+            margin-top: 28px;
+        }
+
+        .welcome-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-height: 46px;
+
+            padding: 0 20px;
+
+            border-radius: 11px;
+
+            background: white;
+
+            color: #4338ca;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            text-decoration: none;
+
+            transition: all 0.2s ease;
+        }
+
+        .welcome-button:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .welcome-button-outline {
+            background: rgba(255, 255, 255, 0.10);
+
+            border: 1px solid rgba(255, 255, 255, 0.35);
+
+            color: white;
+        }
+
+        /* =====================================================
+           USER DASHBOARD
+        ===================================================== */
+
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            margin-bottom: 28px;
+        }
+
+        .user-heading {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .avatar {
+            width: 62px;
+            height: 62px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #2563eb
+                );
+
+            color: white;
+
+            font-size: 25px;
+            font-weight: 800;
+
+            box-shadow:
+                0 8px 20px rgba(79, 70, 229, 0.25);
+        }
+
+        .user-heading h1 {
+            margin-bottom: 5px;
+
+            color: #111827;
+
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .user-heading p {
+            color: #6b7280;
+
+            font-size: 14px;
+        }
+
+        /* =====================================================
+           SECTION
+        ===================================================== */
+
+        .section {
+            margin-top: 28px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 14px;
+        }
+
+        .section-title h2 {
+            color: #111827;
+
+            font-size: 18px;
+            font-weight: 750;
+        }
+
+        .section-title span {
+            color: #9ca3af;
+
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           ACCOUNT CARD
+        ===================================================== */
+
+        .account-card {
+            overflow: hidden;
+
+            background: white;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 8px 25px rgba(15, 23, 42, 0.05);
+        }
+
+        .account-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+        }
+
+        .account-item {
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+
+            padding: 20px;
+
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .account-item:nth-child(odd) {
+            border-right: 1px solid #f1f5f9;
+        }
+
+        .account-item:nth-last-child(-n+2) {
+            border-bottom: none;
+        }
+
+        .account-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            border-radius: 11px;
+
+            background: #eef2ff;
+
+            font-size: 18px;
+        }
+
+        .account-info {
+            min-width: 0;
+        }
+
+        .account-label {
+            display: block;
+
+            margin-bottom: 4px;
+
+            color: #9ca3af;
+
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .account-value {
+            display: block;
+
+            overflow: hidden;
+
+            color: #111827;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+
+            padding: 5px 10px;
+
+            border-radius: 999px;
+
+            background: #ecfdf5;
+
+            color: #047857;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* =====================================================
+           FEATURE CARDS
+        ===================================================== */
+
+        .feature-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 16px;
+        }
+
+        .feature-card {
+            position: relative;
+
+            display: flex;
+            align-items: center;
+
+            gap: 16px;
+
+            min-height: 105px;
+
+            padding: 20px;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 18px;
+
+            background: white;
+
+            color: inherit;
+            text-decoration: none;
+
+            box-shadow:
+                0 8px 25px rgba(15, 23, 42, 0.04);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+
+            border-color: #c7d2fe;
+
+            box-shadow:
+                0 14px 30px rgba(15, 23, 42, 0.09);
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff,
+                    #dbeafe
+                );
+
+            font-size: 23px;
+        }
+
+        .feature-content {
+            min-width: 0;
+        }
+
+        .feature-content h3 {
+            margin-bottom: 5px;
+
+            color: #111827;
+
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .feature-content p {
+            color: #9ca3af;
+
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .feature-arrow {
+            margin-left: auto;
+
+            color: #9ca3af;
+
+            font-size: 20px;
+
+            transition: transform 0.2s ease;
+        }
+
+        .feature-card:hover .feature-arrow {
+            transform: translateX(4px);
+
+            color: #4f46e5;
+        }
+
+        /* =====================================================
+           AUTHORITIES
+        ===================================================== */
+
+        .authority-card {
+            padding: 20px;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 18px;
+
+            background: white;
+
+            box-shadow:
+                0 8px 25px rgba(15, 23, 42, 0.04);
+        }
+
+        .authority-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+
+            list-style: none;
+        }
+
+        .authority-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+
+            padding: 7px 11px;
+
+            border-radius: 999px;
+
+            background: #f3f4f6;
+
+            color: #4b5563;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .authority-badge::before {
+            content: "✓";
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 16px;
+            height: 16px;
+
+            border-radius: 50%;
+
+            background: #4f46e5;
+
+            color: white;
+
+            font-size: 10px;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 700px) {
+
+            .page-wrapper {
+                padding: 30px 0 45px;
+            }
+
+            .welcome-card {
+                padding: 38px 25px;
+
+                border-radius: 22px;
+            }
+
+            .welcome-card h1 {
+                font-size: 29px;
+            }
+
+            .dashboard-header {
+                align-items: flex-start;
+            }
+
+            .user-heading h1 {
+                font-size: 23px;
+            }
+
+            .account-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .account-item {
+                border-right: none !important;
+                border-bottom: 1px solid #f1f5f9 !important;
+            }
+
+            .account-item:last-child {
+                border-bottom: none !important;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .container {
+                padding: 0 15px;
+            }
+
+            .welcome-actions {
+                flex-direction: column;
+            }
+
+            .welcome-button {
+                width: 100%;
+            }
+
+            .user-heading {
+                align-items: flex-start;
+            }
+
+            .avatar {
+                width: 52px;
+                height: 52px;
+
+                border-radius: 15px;
+
+                font-size: 21px;
+            }
+
+            .user-heading h1 {
+                font-size: 21px;
+            }
+
+            .feature-card {
+                min-height: 95px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
 
-<main style="max-width: 1100px; margin: 0 auto; padding: 0 15px;">
 
-    <!-- ===================================================== -->
-    <!-- CHƯA ĐĂNG NHẬP -->
-    <!-- ===================================================== -->
+<main class="page-wrapper">
 
-    <section sec:authorize="isAnonymous()">
-
-        <h1>Chào mừng đến với Shop Management</h1>
-
-        <p>
-            Hệ thống quản lý User và Product.
-        </p>
-
-        <p>
-            Bạn cần đăng nhập để sử dụng các chức năng của hệ thống.
-        </p>
-
-        <p>
-            <a th:href="@{/login}">
-                Đăng nhập
-            </a>
-
-            &nbsp; | &nbsp;
-
-            <a th:href="@{/register}">
-                Đăng ký tài khoản
-            </a>
-        </p>
-
-    </section>
+    <div class="container">
 
 
-    <!-- ===================================================== -->
-    <!-- ĐÃ ĐĂNG NHẬP -->
-    <!-- ===================================================== -->
+        <!-- =================================================
+             CHƯA ĐĂNG NHẬP
+        ================================================== -->
 
-    <section sec:authorize="isAuthenticated()">
+        <section sec:authorize="isAnonymous()">
 
-        <h1>
-            Xin chào,
-            <span th:text="${fullName}">
-                User
-            </span>
-        </h1>
+            <div class="welcome-card">
 
-        <p>
-            Chào mừng bạn quay lại Shop Management.
-        </p>
+                <div class="welcome-content">
+
+                    <div class="welcome-badge">
+                        🛍️ Shop Management
+                    </div>
+
+                    <h1>
+                        Chào mừng đến với Shop Management
+                    </h1>
+
+                    <p>
+                        Hệ thống quản lý User và Product
+                        đơn giản, hiện đại và tiện lợi.
+                    </p>
+
+                    <p>
+                        Đăng nhập để bắt đầu sử dụng
+                        các chức năng của hệ thống.
+                    </p>
+
+                    <div class="welcome-actions">
+
+                        <a th:href="@{/login}"
+                           class="welcome-button">
+
+                            🔐 Đăng nhập
+
+                        </a>
+
+                        <a th:href="@{/register}"
+                           class="welcome-button welcome-button-outline">
+
+                            ✨ Tạo tài khoản
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
 
 
-        <!-- Thông tin tài khoản -->
-        <section style="margin-top: 25px;">
+        <!-- =================================================
+             ĐÃ ĐĂNG NHẬP
+        ================================================== -->
 
-            <h2>Thông tin tài khoản</h2>
+        <section sec:authorize="isAuthenticated()">
 
-            <table border="1"
-                   cellpadding="8"
-                   cellspacing="0">
 
-                <tr>
-                    <th>Username</th>
-                    <td th:text="${username}">
-                        username
-                    </td>
-                </tr>
+            <!-- Dashboard Header -->
 
-                <tr>
-                    <th>Email</th>
-                    <td th:text="${email}">
-                        email@example.com
-                    </td>
-                </tr>
+            <div class="dashboard-header">
 
-                <tr>
-                    <th>Full name</th>
-                    <td th:text="${fullName}">
-                        Full Name
-                    </td>
-                </tr>
+                <div class="user-heading">
 
-                <tr>
-                    <th>Role</th>
-                    <td>
+                    <div class="avatar">
 
-                        <span sec:authorize="hasRole('ADMIN')">
-                            ROLE_ADMIN
+                        <span
+                                th:text="${#strings.substring(fullName, 0, 1).toUpperCase()}">
+                            U
                         </span>
 
-                        <span sec:authorize="hasRole('USER')">
+                    </div>
+
+                    <div>
+
+                        <h1>
+                            Xin chào,
+                            <span th:text="${fullName}">
+                                User
+                            </span>
+                        </h1>
+
+                        <p>
+                            Chào mừng bạn quay lại Shop Management 👋
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 THÔNG TIN TÀI KHOẢN
+            ================================================== -->
+
+            <section class="section">
+
+                <div class="section-title">
+
+                    <h2>
+                        Thông tin tài khoản
+                    </h2>
+
+                    <span>
+                        Account
+                    </span>
+
+                </div>
+
+
+                <div class="account-card">
+
+                    <div class="account-grid">
+
+
+                        <!-- Username -->
+
+                        <div class="account-item">
+
+                            <div class="account-icon">
+                                👤
+                            </div>
+
+                            <div class="account-info">
+
+                                <span class="account-label">
+                                    Username
+                                </span>
+
+                                <span class="account-value"
+                                      th:text="${username}">
+                                    username
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Email -->
+
+                        <div class="account-item">
+
+                            <div class="account-icon">
+                                ✉️
+                            </div>
+
+                            <div class="account-info">
+
+                                <span class="account-label">
+                                    Email
+                                </span>
+
+                                <span class="account-value"
+                                      th:text="${email}">
+                                    email@example.com
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Full name -->
+
+                        <div class="account-item">
+
+                            <div class="account-icon">
+                                🪪
+                            </div>
+
+                            <div class="account-info">
+
+                                <span class="account-label">
+                                    Họ và tên
+                                </span>
+
+                                <span class="account-value"
+                                      th:text="${fullName}">
+                                    Full Name
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Role -->
+
+                        <div class="account-item">
+
+                            <div class="account-icon">
+                                🛡️
+                            </div>
+
+                            <div class="account-info">
+
+                                <span class="account-label">
+                                    Vai trò
+                                </span>
+
+                                <span class="role-badge"
+                                      sec:authorize="hasRole('ADMIN')">
+
+                                    ADMIN
+
+                                </span>
+
+                                <span class="role-badge"
+                                      sec:authorize="hasRole('USER')">
+
+                                    USER
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 CHỨC NĂNG
+            ================================================== -->
+
+            <section class="section">
+
+                <div class="section-title">
+
+                    <h2>
+                        Chức năng
+                    </h2>
+
+                    <span>
+                        Quick Access
+                    </span>
+
+                </div>
+
+
+                <div class="feature-grid">
+
+
+                    <!-- Products -->
+
+                    <a th:href="@{/products}"
+                       class="feature-card">
+
+                        <div class="feature-icon">
+                            📦
+                        </div>
+
+                        <div class="feature-content">
+
+                            <h3>
+                                Quản lý Product
+                            </h3>
+
+                            <p>
+                                Xem và quản lý danh sách sản phẩm
+                            </p>
+
+                        </div>
+
+                        <div class="feature-arrow">
+                            →
+                        </div>
+
+                    </a>
+
+
+                    <!-- Create Product -->
+
+                    <a th:href="@{/products/create}"
+                       class="feature-card">
+
+                        <div class="feature-icon">
+                            ➕
+                        </div>
+
+                        <div class="feature-content">
+
+                            <h3>
+                                Thêm Product
+                            </h3>
+
+                            <p>
+                                Tạo sản phẩm mới vào hệ thống
+                            </p>
+
+                        </div>
+
+                        <div class="feature-arrow">
+                            →
+                        </div>
+
+                    </a>
+
+
+                    <!-- Users -->
+
+                    <a th:href="@{/users}"
+                       class="feature-card"
+                       sec:authorize="hasRole('ADMIN')">
+
+                        <div class="feature-icon">
+                            👥
+                        </div>
+
+                        <div class="feature-content">
+
+                            <h3>
+                                Quản lý User
+                            </h3>
+
+                            <p>
+                                Quản lý tài khoản người dùng
+                            </p>
+
+                        </div>
+
+                        <div class="feature-arrow">
+                            →
+                        </div>
+
+                    </a>
+
+
+                    <!-- Create User -->
+
+                    <a th:href="@{/users/create}"
+                       class="feature-card"
+                       sec:authorize="hasRole('ADMIN')">
+
+                        <div class="feature-icon">
+                            👤
+                        </div>
+
+                        <div class="feature-content">
+
+                            <h3>
+                                Thêm User
+                            </h3>
+
+                            <p>
+                                Tạo tài khoản người dùng mới
+                            </p>
+
+                        </div>
+
+                        <div class="feature-arrow">
+                            →
+                        </div>
+
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 QUYỀN
+            ================================================== -->
+
+            <section class="section">
+
+                <div class="section-title">
+
+                    <h2>
+                        Quyền của tài khoản
+                    </h2>
+
+                    <span>
+                        Permissions
+                    </span>
+
+                </div>
+
+
+                <div class="authority-card">
+
+                    <ul class="authority-list">
+
+                        <li th:each="authority : ${authorities}"
+                            class="authority-badge"
+                            th:text="${authority.authority}">
+
                             ROLE_USER
-                        </span>
 
-                    </td>
-                </tr>
+                        </li>
 
-            </table>
+                    </ul>
+
+                </div>
+
+            </section>
+
 
         </section>
 
-
-        <!-- Chức năng -->
-        <section style="margin-top: 30px;">
-
-            <h2>Chức năng</h2>
-
-            <ul>
-
-                <li>
-                    <a th:href="@{/products}">
-                        Quản lý Product
-                    </a>
-                </li>
-
-                <li>
-                    <a th:href="@{/products/create}">
-                        Thêm Product
-                    </a>
-                </li>
-
-                <li sec:authorize="hasRole('ADMIN')">
-                    <a th:href="@{/users}">
-                        Quản lý User
-                    </a>
-                </li>
-
-                <li sec:authorize="hasRole('ADMIN')">
-                    <a th:href="@{/users/create}">
-                        Thêm User
-                    </a>
-                </li>
-
-            </ul>
-
-        </section>
-
-
-        <!-- Quyền hiện tại -->
-        <section style="margin-top: 30px;">
-
-            <h2>Quyền của tài khoản</h2>
-
-            <ul>
-
-                <li th:each="authority : ${authorities}"
-                    th:text="${authority.authority}">
-                    ROLE_USER
-                </li>
-
-            </ul>
-
-        </section>
-
-    </section>
+    </div>
 
 </main>
+
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 

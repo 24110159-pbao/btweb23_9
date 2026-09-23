@@ -227,12 +227,12 @@ public class AuthController {
         try {
             authService.forgotPassword(dto);
 
-            VerifyOtpDTO verifyOtpDTO = new VerifyOtpDTO();
-            verifyOtpDTO.setEmail(dto.getEmail());
+            ResetPasswordDTO resetPasswordDTO = new ResetPasswordDTO();
+            resetPasswordDTO.setEmail(dto.getEmail());
 
             model.addAttribute(
-                    "verifyOtpDTO",
-                    verifyOtpDTO
+                    "resetPasswordDTO",
+                    resetPasswordDTO
             );
 
             model.addAttribute(
