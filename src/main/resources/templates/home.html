@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Shop Management</title>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main style="max-width: 1100px; margin: 0 auto; padding: 0 15px;">
+
+    <!-- ===================================================== -->
+    <!-- CHƯA ĐĂNG NHẬP -->
+    <!-- ===================================================== -->
+
+    <section sec:authorize="isAnonymous()">
+
+        <h1>Chào mừng đến với Shop Management</h1>
+
+        <p>
+            Hệ thống quản lý User và Product.
+        </p>
+
+        <p>
+            Bạn cần đăng nhập để sử dụng các chức năng của hệ thống.
+        </p>
+
+        <p>
+            <a th:href="@{/login}">
+                Đăng nhập
+            </a>
+
+            &nbsp; | &nbsp;
+
+            <a th:href="@{/register}">
+                Đăng ký tài khoản
+            </a>
+        </p>
+
+    </section>
+
+
+    <!-- ===================================================== -->
+    <!-- ĐÃ ĐĂNG NHẬP -->
+    <!-- ===================================================== -->
+
+    <section sec:authorize="isAuthenticated()">
+
+        <h1>
+            Xin chào,
+            <span th:text="${fullName}">
+                User
+            </span>
+        </h1>
+
+        <p>
+            Chào mừng bạn quay lại Shop Management.
+        </p>
+
+
+        <!-- Thông tin tài khoản -->
+        <section style="margin-top: 25px;">
+
+            <h2>Thông tin tài khoản</h2>
+
+            <table border="1"
+                   cellpadding="8"
+                   cellspacing="0">
+
+                <tr>
+                    <th>Username</th>
+                    <td th:text="${username}">
+                        username
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Email</th>
+                    <td th:text="${email}">
+                        email@example.com
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Full name</th>
+                    <td th:text="${fullName}">
+                        Full Name
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Role</th>
+                    <td>
+
+                        <span sec:authorize="hasRole('ADMIN')">
+                            ROLE_ADMIN
+                        </span>
+
+                        <span sec:authorize="hasRole('USER')">
+                            ROLE_USER
+                        </span>
+
+                    </td>
+                </tr>
+
+            </table>
+
+        </section>
+
+
+        <!-- Chức năng -->
+        <section style="margin-top: 30px;">
+
+            <h2>Chức năng</h2>
+
+            <ul>
+
+                <li>
+                    <a th:href="@{/products}">
+                        Quản lý Product
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/products/create}">
+                        Thêm Product
+                    </a>
+                </li>
+
+                <li sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/users}">
+                        Quản lý User
+                    </a>
+                </li>
+
+                <li sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/users/create}">
+                        Thêm User
+                    </a>
+                </li>
+
+            </ul>
+
+        </section>
+
+
+        <!-- Quyền hiện tại -->
+        <section style="margin-top: 30px;">
+
+            <h2>Quyền của tài khoản</h2>
+
+            <ul>
+
+                <li th:each="authority : ${authorities}"
+                    th:text="${authority.authority}">
+                    ROLE_USER
+                </li>
+
+            </ul>
+
+        </section>
+
+    </section>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

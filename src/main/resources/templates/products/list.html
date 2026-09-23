@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Products - Shop Management</title>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main style="max-width: 1200px; margin: 30px auto; padding: 0 15px;">
+
+    <h1>Quản lý Product</h1>
+
+
+    <!-- ===================================================== -->
+    <!-- FLASH MESSAGE -->
+    <!-- ===================================================== -->
+
+    <div th:if="${successMessage != null}"
+         style="padding: 10px; margin-bottom: 15px; border: 1px solid green; color: green;">
+
+        <span th:text="${successMessage}">
+            Thành công
+        </span>
+
+    </div>
+
+
+    <div th:if="${errorMessage != null}"
+         style="padding: 10px; margin-bottom: 15px; border: 1px solid red; color: red;">
+
+        <span th:text="${errorMessage}">
+            Có lỗi xảy ra
+        </span>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- THỐNG KÊ -->
+    <!-- ===================================================== -->
+
+    <section style="margin-bottom: 25px;">
+
+        <p>
+            <strong>Tổng số Product:</strong>
+
+            <span th:text="${totalProducts}">
+                0
+            </span>
+        </p>
+
+        <p>
+            <strong>Kết quả tìm kiếm:</strong>
+
+            <span th:text="${totalItems}">
+                0
+            </span>
+        </p>
+
+    </section>
+
+
+    <!-- ===================================================== -->
+    <!-- ACTION -->
+    <!-- ===================================================== -->
+
+    <div style="margin-bottom: 20px;">
+
+        <a th:href="@{/products/create}">
+            + Thêm Product
+        </a>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- SEARCH -->
+    <!-- ===================================================== -->
+
+    <form th:action="@{/products}"
+          method="get"
+          style="margin-bottom: 20px;">
+
+        <label for="keyword">
+            Tìm kiếm:
+        </label>
+
+        <input id="keyword"
+               type="text"
+               name="keyword"
+               th:value="${keyword}"
+               placeholder="Tên hoặc description"
+               style="width: 300px; padding: 7px;">
+
+
+        <label for="size"
+               style="margin-left: 10px;">
+            Số dòng:
+        </label>
+
+        <select id="size"
+                name="size">
+
+            <option value="5"
+                    th:selected="${pageSize == 5}">
+                5
+            </option>
+
+            <option value="10"
+                    th:selected="${pageSize == 10}">
+                10
+            </option>
+
+            <option value="20"
+                    th:selected="${pageSize == 20}">
+                20
+            </option>
+
+            <option value="50"
+                    th:selected="${pageSize == 50}">
+                50
+            </option>
+
+            <option value="100"
+                    th:selected="${pageSize == 100}">
+                100
+            </option>
+
+        </select>
+
+
+        <button type="submit">
+            Tìm kiếm
+        </button>
+
+
+        <a th:href="@{/products}"
+           style="margin-left: 10px;">
+            Xóa tìm kiếm
+        </a>
+
+    </form>
+
+
+    <!-- ===================================================== -->
+    <!-- PRODUCT TABLE -->
+    <!-- ===================================================== -->
+
+    <div style="overflow-x: auto;">
+
+        <table border="1"
+               cellpadding="8"
+               cellspacing="0"
+               width="100%">
+
+            <thead>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Ảnh</th>
+
+                <th>Tên Product</th>
+
+                <th>Description</th>
+
+                <th>Giá</th>
+
+                <th>Username</th>
+
+                <th>Thao tác</th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            <!-- Không có Product -->
+            <tr th:if="${#lists.isEmpty(products)}">
+
+                <td colspan="7"
+                    style="text-align: center;">
+
+                    Không tìm thấy Product.
+
+                </td>
+
+            </tr>
+
+
+            <!-- Product -->
+            <tr th:each="product : ${products}">
+
+                <!-- ID -->
+                <td th:text="${product.id}">
+                    1
+                </td>
+
+
+                <!-- Image -->
+                <td style="text-align: center;">
+
+                    <div th:if="${product.imageUrl != null
+                                 and !#strings.isEmpty(product.imageUrl)}">
+
+                        <img th:src="${product.imageUrl}"
+                             th:alt="${product.name}"
+                             width="100"
+                             height="100"
+                             style="object-fit: cover;">
+
+                    </div>
+
+                    <span th:if="${product.imageUrl == null
+                                  or #strings.isEmpty(product.imageUrl)}">
+
+                        Không có ảnh
+
+                    </span>
+
+                </td>
+
+
+                <!-- Name -->
+                <td>
+
+                    <strong th:text="${product.name}">
+                        Product name
+                    </strong>
+
+                </td>
+
+
+                <!-- Description -->
+                <td>
+
+                    <span th:if="${product.description != null
+                                  and !#strings.isEmpty(product.description)}"
+                          th:text="${product.description}">
+                        Description
+                    </span>
+
+                    <span th:if="${product.description == null
+                                  or #strings.isEmpty(product.description)}">
+
+                        Không có description
+
+                    </span>
+
+                </td>
+
+
+                <!-- Price -->
+                <td>
+
+                    <span th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')}">
+                        0
+                    </span>
+
+                </td>
+
+
+                <!-- Username -->
+                <td th:text="${product.username}">
+                    username
+                </td>
+
+
+                <!-- Actions -->
+                <td>
+
+                    <a th:href="@{/products/edit/{id}(id=${product.id})}">
+                        Sửa
+                    </a>
+
+
+                    <span>
+                        |
+                    </span>
+
+
+                    <form th:action="@{/products/delete/{id}(id=${product.id})}"
+                          method="post"
+                          style="display: inline;"
+                          onsubmit="return confirm('Bạn có chắc muốn xóa Product này không?');">
+
+                        <!-- CSRF -->
+                        <input type="hidden"
+                               th:name="${_csrf.parameterName}"
+                               th:value="${_csrf.token}">
+
+                        <button type="submit">
+                            Xóa
+                        </button>
+
+                    </form>
+
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- PAGINATION -->
+    <!-- ===================================================== -->
+
+    <div th:if="${totalPages > 0}"
+         style="margin-top: 25px;">
+
+        <strong>Trang:</strong>
+
+
+        <!-- Previous -->
+        <span th:if="${currentPage > 0}">
+
+            <a th:href="@{/products(
+                    page=${currentPage - 1},
+                    size=${pageSize},
+                    keyword=${keyword}
+                )}">
+
+                ← Trước
+
+            </a>
+
+        </span>
+
+
+        <span th:if="${currentPage == 0}">
+            ← Trước
+        </span>
+
+
+        <span style="margin: 0 10px;">
+            |
+        </span>
+
+
+        <!-- Page numbers -->
+        <span th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}">
+
+            <span th:if="${pageNumber == currentPage}">
+
+                <strong>
+                    <span th:text="${pageNumber + 1}">
+                        1
+                    </span>
+                </strong>
+
+            </span>
+
+
+            <span th:if="${pageNumber != currentPage}">
+
+                <a th:href="@{/products(
+                        page=${pageNumber},
+                        size=${pageSize},
+                        keyword=${keyword}
+                    )}"
+                   th:text="${pageNumber + 1}">
+
+                    1
+
+                </a>
+
+            </span>
+
+
+            <span th:if="${pageNumber < totalPages - 1}">
+                |
+            </span>
+
+        </span>
+
+
+        <span style="margin: 0 10px;">
+            |
+        </span>
+
+
+        <!-- Next -->
+        <span th:if="${currentPage < totalPages - 1}">
+
+            <a th:href="@{/products(
+                    page=${currentPage + 1},
+                    size=${pageSize},
+                    keyword=${keyword}
+                )}">
+
+                Sau →
+
+            </a>
+
+        </span>
+
+
+        <span th:if="${currentPage >= totalPages - 1}">
+            Sau →
+        </span>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- PAGE INFORMATION -->
+    <!-- ===================================================== -->
+
+    <p th:if="${totalPages > 0}"
+       style="margin-top: 15px;">
+
+        Trang
+        <strong th:text="${currentPage + 1}">
+            1
+        </strong>
+
+        /
+        <strong th:text="${totalPages}">
+            1
+        </strong>
+
+        -
+
+        Tổng
+        <strong th:text="${totalItems}">
+            0
+        </strong>
+
+        Product
+
+    </p>
+
+
+    <p th:if="${totalPages == 0}"
+       style="margin-top: 15px;">
+
+        Không có dữ liệu.
+
+    </p>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

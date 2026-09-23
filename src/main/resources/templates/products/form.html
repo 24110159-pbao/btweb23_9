@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${formTitle} + ' - Shop Management'">
+        Product - Shop Management
+    </title>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main style="max-width: 650px; margin: 30px auto; padding: 0 15px;">
+
+    <!-- ===================================================== -->
+    <!-- TITLE -->
+    <!-- ===================================================== -->
+
+    <h1 th:text="${formTitle}">
+        Thêm Product
+    </h1>
+
+
+    <!-- ===================================================== -->
+    <!-- ERROR MESSAGE -->
+    <!-- ===================================================== -->
+
+    <div th:if="${errorMessage != null}"
+         style="padding: 10px; margin-bottom: 20px; border: 1px solid red; color: red;">
+
+        <span th:text="${errorMessage}">
+            Có lỗi xảy ra.
+        </span>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- PRODUCT FORM -->
+    <!-- ===================================================== -->
+
+    <form th:action="${editMode}
+            ? @{/products/edit/{id}(id=${productDTO.id})}
+            : @{/products/create}"
+          th:object="${productDTO}"
+          method="post"
+          enctype="multipart/form-data">
+
+        <!-- CSRF -->
+        <input type="hidden"
+               th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}">
+
+
+        <!-- ================================================= -->
+        <!-- ID -->
+        <!-- ================================================= -->
+
+        <div th:if="${editMode}"
+             style="margin-bottom: 15px;">
+
+            <label>
+                ID
+            </label>
+
+            <br>
+
+            <input type="text"
+                   th:value="${productDTO.id}"
+                   readonly
+                   style="width: 100%; padding: 8px; box-sizing: border-box;">
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- NAME -->
+        <!-- ================================================= -->
+
+        <div style="margin-bottom: 15px;">
+
+            <label for="name">
+                Tên Product
+            </label>
+
+            <br>
+
+            <input id="name"
+                   type="text"
+                   th:field="*{name}"
+                   maxlength="200"
+                   placeholder="Nhập tên Product"
+                   required
+                   style="width: 100%; padding: 8px; box-sizing: border-box;">
+
+            <div th:if="${#fields.hasErrors('name')}"
+                 th:errors="*{name}"
+                 style="color: red; margin-top: 5px;">
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- DESCRIPTION -->
+        <!-- ================================================= -->
+
+        <div style="margin-bottom: 15px;">
+
+            <label for="description">
+                Description
+            </label>
+
+            <br>
+
+            <textarea id="description"
+                      th:field="*{description}"
+                      maxlength="5000"
+                      rows="6"
+                      placeholder="Nhập mô tả Product"
+                      style="width: 100%; padding: 8px; box-sizing: border-box;"></textarea>
+
+            <div th:if="${#fields.hasErrors('description')}"
+                 th:errors="*{description}"
+                 style="color: red; margin-top: 5px;">
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- PRICE -->
+        <!-- ================================================= -->
+
+        <div style="margin-bottom: 15px;">
+
+            <label for="price">
+                Giá
+            </label>
+
+            <br>
+
+            <input id="price"
+                   type="number"
+                   th:field="*{price}"
+                   min="0"
+                   step="0.01"
+                   placeholder="0"
+                   required
+                   style="width: 100%; padding: 8px; box-sizing: border-box;">
+
+            <div th:if="${#fields.hasErrors('price')}"
+                 th:errors="*{price}"
+                 style="color: red; margin-top: 5px;">
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- CURRENT IMAGE -->
+        <!-- ================================================= -->
+
+        <div th:if="${editMode
+                     and productDTO.imageUrl != null
+                     and !#strings.isEmpty(productDTO.imageUrl)}"
+             style="margin-bottom: 20px;">
+
+            <label>
+                Ảnh hiện tại
+            </label>
+
+            <br>
+
+            <img th:src="${productDTO.imageUrl}"
+                 th:alt="${productDTO.name}"
+                 width="180"
+                 height="180"
+                 style="object-fit: cover; margin-top: 10px;">
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- IMAGE -->
+        <!-- ================================================= -->
+
+        <div style="margin-bottom: 20px;">
+
+            <label for="image">
+                <span th:if="${editMode}">
+                    Thay ảnh
+                </span>
+
+                <span th:unless="${editMode}">
+                    Ảnh Product
+                </span>
+            </label>
+
+            <br>
+
+            <input id="image"
+                   type="file"
+                   name="image"
+                   accept="image/*"
+                   style="margin-top: 8px;">
+
+            <p style="font-size: 14px; color: #555;">
+
+                <span th:if="${editMode}">
+                    Không chọn file nếu không muốn thay ảnh hiện tại.
+                </span>
+
+                <span th:unless="${editMode}">
+                    Có thể bỏ qua nếu Product không có ảnh.
+                </span>
+
+            </p>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- SUBMIT -->
+        <!-- ================================================= -->
+
+        <div style="margin-top: 25px;">
+
+            <button type="submit"
+                    th:text="${editMode ? 'Cập nhật Product' : 'Thêm Product'}">
+
+                Thêm Product
+
+            </button>
+
+
+            <a th:href="@{/products}"
+               style="margin-left: 15px;">
+
+                Hủy
+
+            </a>
+
+        </div>
+
+    </form>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

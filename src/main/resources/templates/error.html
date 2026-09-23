@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lỗi - Shop Management</title>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main style="max-width: 1100px; margin: 0 auto; padding: 0 15px;">
+
+    <h1>Có lỗi xảy ra</h1>
+
+    <hr>
+
+    <!-- HTTP Status -->
+    <p th:if="${status != null}">
+        <strong>HTTP Status:</strong>
+        <span th:text="${status}">500</span>
+    </p>
+
+    <!-- Error -->
+    <p th:if="${error != null}">
+        <strong>Error:</strong>
+        <span th:text="${error}">
+            Internal Server Error
+        </span>
+    </p>
+
+    <!-- Message -->
+    <p th:if="${message != null and !#strings.isEmpty(message)}">
+        <strong>Message:</strong>
+        <span th:text="${message}">
+            Đã xảy ra lỗi.
+        </span>
+    </p>
+
+    <!-- Nếu không có message -->
+    <p th:if="${message == null or #strings.isEmpty(message)}">
+        Hệ thống đã xảy ra lỗi trong quá trình xử lý yêu cầu.
+    </p>
+
+    <br>
+
+    <a th:href="@{/}">
+        ← Về trang chủ
+    </a>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>
